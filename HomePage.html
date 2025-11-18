@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="style_HomePage.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- 引入 jQuery -->
+    <script src="HomeScript.js" defer></script> <!-- 引入 JavaScript 文件 -->
+</head>
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            url: 'UserNum.php', // 指定後端處理文件的路徑
+            type: 'GET',
+            success: function(data) {
+                $('#UserNum').text(data); // 將從後端獲取的使用者數量更新到 HTML 中
+            },
+            error: function() {
+                alert('Error fetching user count.');
+            }
+        });
+        $.ajax({
+            url: 'PollNum.php', // 指定後端處理文件的路徑
+            type: 'GET',
+            success: function(data) {
+                $('#PollNum').text(data); // 將從後端獲取的使用者數量更新到 HTML 中
+            },
+            error: function() {
+                alert('Error fetching user count.');
+            }
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword1 = document.getElementById('togglePassword1');
+        const togglePassword2 = document.getElementById('togglePassword2');
+        const passwordField = document.getElementById('Password');
+        const confirmPasswordField = document.getElementById('confirmPassword');
+
+        togglePassword1.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            // 切換圖示
+            this.src = type === 'password' ? 'pic/eye_closed_icon.png' : 'pic/eye_open_icon.png';
+        });
+
+        togglePassword2.addEventListener('click', function() {
+            const type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordField.setAttribute('type', type);
+            // 切換圖示
+            this.src = type === 'password' ? 'pic/eye_closed_icon.png' : 'pic/eye_open_icon.png';
+        });
+    });
+</script>
+<body>      
+    <main>
+        <!-- 最上方淺藍水平條 -->
+        <div class="container-wrapper">
+            <a href="HomePage.html"><p>&ensp;&ensp;&ensp;&ensp;&ensp;Voting System</p></a>
+            <img src="pic/List.png" style="height: 20px;position: absolute; left:350px;">        
+        </div>
+        <!-- 最上方淺藍水平條尾部之使用者區塊 -->
+        <div id="ShowUser" class="container-wrapper-user">
+            <!-- 使用者相片與姓名，點擊跳出小視窗 -->
+            <button onclick="ShowUserData()">
+                <img src="pic/username_icon.png" id="userPhoto1" alt="User Photo">               
+                <p id="usernameDisplay1" style="font-size: 15px;color: #fff;"></p>
+                <div id="Block1" style="display: none;">
+                    <img src="pic/username_icon.png"  id="userPhoto2" alt="User Photo" style="height: 80px;width: 80px;">
+                    <p id="usernameDisplay2" style="font-size: 15px;color: #fff;"></p>
+                </div>
+            </button>
+        </div>
+        <div id="Block2" style="display: none;" >
+            <button  id="Update" onclick="openModal()" style="position: absolute;left: 25px;top:15px;font-size: 15px;">
+                Update
+            </button>
+            <button id="SignOut" onclick="SignOut()" style="position: absolute;right: 25px;top:15px;font-size: 15px;">
+                SignOut
+            </button>
+        </div>
+        <!-- Update 視窗 -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <!-- X  按钮 -->
+                <span class="close" onclick="closeModal()">&times;</span>
+                <!-- Close 按钮 -->
+                <button class="close" id="CloseBTN" onclick="closeModal()"> X Close</button>
+                <!-- Save 按钮 -->
+                <button class="close" id="SaveBTN" onclick="saveChanges(event)"> V Save </button>
+
+                <!-- 標題 -->
+                <p  style="font-size: 25px;"><b>&ensp; Users Profile</b></p>
+
+                <div style="border: 1px solid #ccc;"></div> <!-- 水平橫線 -->
+                <!-- 輸入使用者名稱欄位 -->
+                <div class="input-container">
+                    <p><b>&ensp;&ensp; Usernames:</b></p>
+                    <input type="text" placeholder="NewUsername" class="input-field"> 
+                </div>
+                <!-- 輸入密碼欄位 -->
+                <div class="input-container">
+                    <p><b>&ensp;&ensp; Password:</b></p>
+                    <input type="password" placeholder="NewPassword" id="Password" class="input-field">
+                    <img src="pic/eye_closed_icon.png"  style="margin-right: 10%;height: 25px;" alt="Eye Icon" id="togglePassword1"> <!-- 插入眼睛圖示 -->       
+                </div>
+                <!-- 上傳檔案欄位 -->
+                <form id="profileForm" enctype="multipart/form-data">
+                    <div class="input-container">
+                        <p><b>&ensp;&ensp; Photos:</b></p>
+                        <input type="file" placeholder="NewPhoto" id="fileInput" class="input-field"> 
+                    </div>
+                </form>
+
+                <div style="border: 1px solid #ccc;"></div> <!-- 水平橫線 -->
+                <!-- 輸入目前密碼確認修改 -->
+                <div class="input-container">
+                    <p><b>&ensp;&ensp; Current Password:</b></p>
+                    <input type="password" placeholder="CurrentPassword" id="confirmPassword" class="input-field"> 
+                    <img src="pic/eye_closed_icon.png"  style="margin-right: 10%;height: 25px;" alt="Eye Icon" id="togglePassword2"> <!-- 插入眼睛圖示 -->       
+                </div>
+
+                <div style="border: 1px solid #ccc;"></div> <!-- 水平橫線 -->
+                
+                <!-- 錯誤提示 -->
+                <div id="error-container" class="error-message" style="margin-top: 100px;display: none;"><br></div>
+            </div>
+        </div> 
+        <!-- -------------------------------------------------------------------------------  -->
+        <div class="container">
+            <!-- 最左側區塊 -->
+            <div class="user-info">
+                <!-- 使用者相片 -->
+                <img id="userPhoto3" src="pic/username_icon.png"  alt="User Photo" class="user_img" >
+                <!-- 使用者名稱+在線提示 -->
+                <p id="usernameDisplay3"><br></p><p id="OnOutLine" style="font-size: 15px;top:50px;">🟢 Online </p>
+            </div>
+            <div class="List-Title">
+                <!-- 列表Title -->
+                <p>&ensp;<b>MANAGE</b></p>
+            </div>
+            <div class="List_Option">
+                <!-- 選項1:Home -->
+                <div>
+                    <button id="ListBTN" onclick="redirectToHomePage('HomePage')">
+                        <img src="pic/line.png" style="position: absolute; right:290px;height: 50px; " alt="">
+                        <img src="pic/home.png" style="position: absolute;height: 30px;right:240px;" alt="HomePage"> <!-- 圖片 -->
+                        <b>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;Home</b>
+                    </button>
+                </div>
+                <!-- 選項2:Poll page -->
+                <div style="position: absolute; top: 50px;">
+                    <button id="ListBTN" onclick="redirectToHomePage('PollPage')">
+                        <img src="pic/poll.png" style="position: absolute;height: 30px;right:240px;" alt="PollPage"> <!-- 圖片 -->
+                        <b>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;Poll page</b>
+                    </button>
+                </div>
+            
+                <!-- 投票框顯示區塊 -->
+                <div class="modal-container">
+                        
+                </div>  
+            </div>
+        </div>
+        <!-- -------------------------------------------------------------------------------  -->
+        <!-- 投票活動統計顯示區塊 -->
+        
+        <div class="PollNum">
+            <h2 style="position: absolute;top:-65px;font-family: Arial">Polls</h2>
+            <h1 id="PollNum"style="right:540px;">Loading...</h1> <!-- 初始顯示為 "Loading..."，後續將被 AJAX 更新 -->
+            <p>&ensp;&ensp;No,of Polls</p>
+            <img src="pic/PollNum.png" style="position: absolute;width:70px;right:30px;">     
+        </div>
+        <div class="PollMoreInfo">
+            <button>
+                <p style="font-family: Arial;margin: 50px auto;">More Info&ensp;<img src="pic/MoreInfo.png" style="width:15px;position: relative;top:2px;"></p>
+            </button>
+        </div>
+        <div class="UserNum">
+            <h1 id="UserNum" style="right:550px;">Loading...</h1> <!-- 初始顯示為 "Loading..."，後續將被 AJAX 更新 -->
+            <p>&ensp;&ensp;No,of Users</p>
+            <img src="pic/UserNum.png" style="position: absolute;width:70px;right:30px;">          
+        </div>   
+        <div class="UserMoreInfo">
+            <button>
+                <p style="font-family: Arial;margin: 50px auto;">More Info&ensp;<img src="pic/MoreInfo.png" style="width:15px;position: relative;top:2px;"></p>
+            </button>
+        </div>
+
+        
+        
+    </main>
+</body>
+</html>

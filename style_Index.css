@@ -1,0 +1,86 @@
+body, html {
+  background-color: #A8DADC;
+}
+
+a {
+  text-decoration: none; /* 移除超連結的下劃線 */
+}
+
+.container-wrapper {
+  background-color: #fff;
+  justify-content: center; /* 水平居中 */
+  align-items: flex-start; /* 垂直居上 */
+  display: flex;
+  height: 300px;
+  margin: 200px auto; /* 上下間距 200px，左右自動居中 */
+  text-align: center;
+  width: 600px; /* 固定寬度 */
+  max-width: 90%; /* 最大寬度為屏幕寬度的90% */
+  border-radius: 30px;
+  position: relative; /* 將容器設為相對定位 */
+}
+
+.container-wrapper button {
+  background-color: #000;
+  font-size: 20px;
+  border-radius: 30px;
+  color: #fff; /* 設置文字顏色 */
+  height: 40px; /* 高度40px */
+  width: 130px;
+}
+
+.container-wrapper button:hover {
+  background-color: #C62E2E; /* 在滑過時更改背景色 */
+}
+
+.container-wrapper button:active {
+  background-color: #931B1B; /* 在按下時更改背景色 */
+}
+
+.input-container {
+  position: relative; /* 將容器設為相對定位 */
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.input-container img {
+  position: absolute; /* 圖片絕對定位 */
+  top: 50%; /* 上邊緣距離父元素的 50% */
+  right: 10px; /* 與父元素右邊距離 10px */
+  transform: translateY(-50%); /* 垂直置中 */
+  height: 30px; /* 設置圖片高度 */
+}
+
+.input-container input {
+  width: 400px; /* 設置輸入框寬度 */
+  height: 40px; /* 設置輸入框高度 */
+  padding-right: 40px; /* 調整右邊填充以容納圖片 */
+}
+
+.container-wrapper p:last-child {
+  margin-top: 0px; /* 調整上外邊距以使其偏上方 */
+  font-size: 15px;
+}
+
+/* 將圖片的樣式設定為絕對定位 */
+.icon {
+  right: 470px;
+  margin-top:8px;
+  height: 30px;
+}
+
+.error-message{
+  background-color: red; 
+  position: relative; /* 將容器設為相對定位 */
+  font-size: 15px;
+  color: #fff; /* 設置文字顏色 */
+  display: flex;
+  justify-content: center; /* 水平置中 */
+  align-items: center; /* 垂直置中 */
+  height: 30%;
+  text-align: center;
+  width: 600px; /* 固定寬度 */
+  max-width: 100%; /* 最大寬度為屏幕寬度的90% */
+  position: relative; /* 將容器設為相對定位 */
+  font-weight: bold;
+}

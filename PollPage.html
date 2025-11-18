@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poll Page</title>
+    <link rel="stylesheet" href="style_PollPage.css">
+    <script src="PollScript.js" defer></script> <!-- 引入 JavaScript 文件 -->
+    <script>
+        var response = null; // 在这里定义 response 变量，确保它是一个有效的值
+
+        window.onload = function() {
+            updateUIBasedOnSignInStatus();
+        };
+        
+        function updateUIBasedOnSignInStatus() {
+            const isSignedOut = sessionStorage.getItem('userSignedOut');
+            if (isSignedOut === 'true') {
+                // 使用存儲的值更新界面
+                document.getElementById('userPhoto1').src = "pic/username_icon.png";
+                document.getElementById('userPhoto2').src = "pic/username_icon.png";
+                document.getElementById('userPhoto3').src = "pic/username_icon.png";
+                document.getElementById('OnOutLine').textContent = sessionStorage.getItem('outlineStatus') || "🔴 Outline";
+                document.getElementById('SignOut').textContent = "SignIn";
+                document.getElementById('SignOut').setAttribute('onclick', 'signInFunction()'); // 為登入按鈕新增點擊事件
+        
+                // 如果需要，可重新添加登入的事件處理器
+                // 例如，假設 signInFunction 是處理登入的函數
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword1 = document.getElementById('togglePassword1');
+            const togglePassword2 = document.getElementById('togglePassword2');
+            const passwordField = document.getElementById('Password');
+            const confirmPasswordField = document.getElementById('confirmPassword');
+
+            togglePassword1.addEventListener('click', function() {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                // 切換圖示
+                this.src = type === 'password' ? 'pic/eye_closed_icon.png' : 'pic/eye_open_icon.png';
+            });
+
+            togglePassword2.addEventListener('click', function() {
+                const type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPasswordField.setAttribute('type', type);
+                // 切換圖示
+                this.src = type === 'password' ? 'pic/eye_closed_icon.png' : 'pic/eye_open_icon.png';
+            });
+        });
+    </script>        
+</head>
+<body>      
+    <main>
+        <!-- 最上方淺藍水平條 -->
+        <div class="container-wrapper">
+            <a href="HomePage.html"><p>&ensp;&ensp;&ensp;&ensp;&ensp;Voting System</p></a>   
+            <img src="pic/List.png" style="height: 20px;position: absolute; left:350px;">             
+        </div>
+        <!-- 最上方淺藍水平條尾部之使用者區塊 -->
+        <div id="ShowUser" class="container-wrapper-user">
+            <!-- 使用者相片與姓名，點擊跳出小視窗 -->
+            <button onclick="ShowUserData()">
+                <img src="pic/username_icon.png" id="userPhoto1" alt="User Photo">               
+                <p id="usernameDisplay1" style="font-size: 15px;color: #fff;"></p>
+                <div id="Block1" style="display: none;">
+                    <img src="pic/username_icon.png"  id="userPhoto2" alt="User Photo" style="height: 80px;width: 80px;">
+                    <p id="usernameDisplay2" style="font-size: 15px;color: #fff;"></p>
+                </div>
+            </button>
+        </div>
+        <div id="Block2" style="display: none;" >
+            <button  id="Update" onclick="openModal()" style="position: absolute;left: 25px;top:15px;font-size: 15px;">
+                Update
+            </button>
+            <button id="SignOut" onclick="SignOut()" style="position: absolute;right: 25px;top:15px;font-size: 15px;">
+                SignOut
+            </button>
+        </div>
+        <!-- Update 視窗 -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <!-- X  按钮 -->
+                <span class="close" onclick="closeModal('myModal')">&times;</span>
+                <!-- Close 按钮 -->
+                <button class="close" id="CloseBTN" onclick="closeModal('myModal')"> X Close</button>
+                <!-- Save 按钮 -->
+                <button class="close" id="SaveBTN" onclick="saveChanges(event)"> V Save </button>
+
+                <!-- 標題 -->
+                <p  style="font-size: 25px;"><b>&ensp; Users Profile</b></p>
+
+                <div style="border: 1px solid #ccc;"></div> <!-- 水平橫線 -->
+                <!-- 輸入使用者名稱欄位 -->
+                <div class="input-container">
+                    <p><b>&ensp;&ensp; Usernames:</b></p>
+                    <input type="text" placeholder="NewUsername" class="input-field"> 
+                </div>
+                <!-- 輸入密碼欄位 -->
+                <div class="input-container">
+                    <p><b>&ensp;&ensp; Password:</b></p>
+                    <input type="password" placeholder="NewPassword" id="Password" class="input-field"> 
+                    <img src="pic/eye_closed_icon.png"  style="margin-right: 10%;height: 25px;" alt="Eye Icon" id="togglePassword1"> <!-- 插入眼睛圖示 -->       
+                </div>
+                <!-- 上傳檔案欄位 -->
+                <form id="profileForm" enctype="multipart/form-data">
+                    <div class="input-container">
+                        <p><b>&ensp;&ensp; Photos:</b></p>
+                        <input type="file" placeholder="NewPhoto" id="fileInput" class="input-field"> 
+                    </div>
+                </form>
+
+                <div style="border: 1px solid #ccc;"></div> <!-- 水平橫線 -->
+                <!-- 輸入目前密碼確認修改 -->
+                <div class="input-container">
+                    <p><b>&ensp;&ensp; Current Password:</b></p>
+                    <input type="password" placeholder="CurrentPassword" id="confirmPassword" class="input-field"> 
+                    <img src="pic/eye_closed_icon.png"  style="margin-right: 10%;height: 25px;" alt="Eye Icon" id="togglePassword2"> <!-- 插入眼睛圖示 -->       
+                </div>
+
+                <div style="border: 1px solid #ccc;"></div> <!-- 水平橫線 -->
+                
+                <!-- 錯誤提示 -->
+                <div id="error-container" class="error-message" style="margin-top: 100px;display: none;"><br></div>
+            </div>
+        </div> 
+        <!-- -------------------------------------------------------------------------------  -->
+        <!-- 最左側區塊 -->   
+        <div class="user-info">
+            <!-- 使用者相片 -->
+            <img src="pic/username_icon.png" id="userPhoto3" alt="User Photo" class="user_img">
+            <!-- 使用者名稱+在線提示 -->
+            <p id="usernameDisplay3"><br></p><p id="OnOutLine" style="font-size: 15px;top:50px;">🟢 Online </p>
+        </div>
+        <div class="List-Title">
+            <!-- 列表Title -->
+            <p>&ensp;<b>MANAGE</b></p>
+        </div>
+
+        <div class="List_Option">
+            <!-- 選項1:Home -->
+            <div>
+                <button onclick="redirectToHomePage('HomePage')">
+                    <img src="pic/home.png" style="position: absolute;height: 30px;right:240px;" alt="HomePage"> <!-- 圖片 -->
+                    <b>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;Home</b>
+                </button>
+            </div>
+            <!-- 選項2:Poll page -->
+            <div style="position: absolute; top: 50px;">
+                <button onclick="redirectToHomePage('PollPage')">
+                    <img src="pic/line.png" style="position: absolute; right:290px;height: 50px; " alt="">
+                    <img src="pic/poll.png" style="position: absolute;height: 30px;right:240px;" alt="PollPage"> <!-- 圖片 -->
+                    <b>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;Poll page</b>
+                </button>
+            </div>
+        </div>
+        <!-- -------------------------------------------------------------------------------  -->
+        <div class="Home_Content">
+            <h1> &ensp;&ensp; Topic and Titles </h1>
+            <div class="Content_Title">
+
+                <button id="New" onclick="openPollModal()">
+                    <b>&ensp;+ New</b>
+                </button>
+
+                <p>
+                    &ensp;&ensp;Show
+                    <select id="entriesSelect">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                    </select>
+                    entries
+                    &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+                    Search:
+                    <input type="text" id="searchInput" placeholder="Search..." oninput="searchTopics(response)">
+                </p> 
+            </div>
+
+            <div class="Content_List">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <p>Topics <button onclick="ClickSort(this)" style="background: transparent; border: none;"><img src="pic/sort.png" style="height: 15px;"></button></p>
+                            </th>
+                            <th>
+                                <p>Titles <button onclick="ClickSort(this)" style="background: transparent; border: none;"><img src="pic/sort.png" style="height: 15px;"></button></p>
+                            </th>
+                            <th>
+                                <p>Created Time <button onclick="ClickSort(this)" style="background: transparent; border: none;"><img src="pic/sort.png" style="height: 15px;"></button></p>
+                            </th>
+                            <th>
+                                <p>Tools <button onclick="ClickSort(this)" style="background: transparent; border: none;"><img src="pic/sort.png" style="height: 15px;"></button></p>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            
+                        </tr>
+                    </tbody>
+                    <!-- 添加更多行 -->
+
+                </table>
+                <div style="display: flex; justify-content: flex-end;">
+                    <p style="margin: 0 10px; font-size: 15px;">&nbsp;Showing&nbsp;</p>
+                    <button id="Previous">Previous</button>
+                    <span  id="Page" style="margin: 0 10px; font-size: 15px;">&nbsp;1&nbsp;</span>
+                    <button id="Next">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新增投票框--> 
+        <!-- NewPoll 視窗 -->
+         <div id="PollModal" class="Pollmodal">
+            <div class="pollmodal-content">
+                <!-- X  按钮 -->
+                <span class="close" onclick="closeModal('PollModal')">&times;</span>
+                <!-- Close 按钮 -->
+                <button class="close" id="CloseBTN" style="right: 120px;border-radius: 10px;" onclick="closeModal('PollModal')"> X Close</button>
+                <!-- Save 按钮 -->
+                <button class="close" id="SaveBTN" style="right: 30px;border-radius: 10px;" onclick="savePollChanges(event)"> V Save </button>
+
+                <!-- 標題 -->
+                <p  style="font-size: 25px;"><b>&ensp; Add New Topics</b></p>
+
+                <div style="border: 1px solid #ccc;"></div> <!-- 水平橫線 -->
+
+               <!-- Topics欄位下拉式選單包含(動畫與漫畫、名人與電影、科技創新、金融投資) -->
+                <div class="input-container">
+                    <p><b>&ensp;&ensp; Topics:</b></p>
+                    <div style="display: flex; align-items: center;">
+                        <select id="topicSelect" class="input-field" style="margin-right: 5px;">
+                            <option value="Select existing">Select existing</option>
+                            <option value="動畫與漫畫">動畫與漫畫</option>
+                            <option value="名人與電影">名人與電影</option>
+                            <option value="科技創新">科技創新</option>
+                            <option value="金融投資">金融投資</option>
+                        </select>
+                        <input type="text" placeholder="Enter new title" id="newTopicInput" class="input-field"> 
+                    </div>
+                </div>
+                <!-- 輸入Titles欄位下拉式選單包含(好聽、好看、專業、發大財) -->
+                <div class="input-container">
+                    <p><b>&ensp;&ensp; Titles:</b></p>
+                    <div style="display: flex; align-items: center;">
+                        <select id="titleSelect" class="input-field" style="margin-right: 5px;">
+                            <option value="Select existing">Select existing</option>
+                            <option value="好聽">好聽</option>
+                            <option value="好看">好看</option>
+                            <option value="專業">專業</option>
+                            <option value="發大財">發大財</option>
+                        </select>
+                        <input type="text" placeholder="Enter new title" id="newTitleInput" class="input-field"> 
+                    </div>
+                </div>
+                <!-- enter a new Option or Add options and enter new Options -->
+                <div class="input-container" id="optionsContainer">
+                    <p><b>&ensp;&ensp; Options:</b></p>
+                    <div id="optionInputs">
+                        <input type="text" placeholder="NewOptions" class="input-field">
+                        <br>
+                    </div>
+                    <button type="button" onclick="addOption()" class="add-options-btn">Add<br>options</button>
+                </div>
+
+                <div style="border: 1px solid #ccc;"></div> <!-- 水平橫線 -->
+                
+                
+            </div>    
+            <!-- 錯誤提示 -->
+            <div id="save_error-container" class="error-message" style="margin-left: 550px;display: none;"><br></div>        
+         </div>        
+        <!-- -------------------------------------------------------------------------------  --> 
+        <!-- EditPoll 視窗 -->
+        <div id="EditPollModal" class="Pollmodal">
+            <div class="pollmodal-content">
+                <!-- X  按钮 -->
+                <span class="close" onclick="closeModal('EditPollModal')">&times;</span>
+                <!-- Close 按钮 -->
+                <button class="close" id="CloseBTN" style="right: 120px;border-radius: 10px;" onclick="closeModal('EditPollModal')"> X Close</button>
+                <!-- Save 按钮 -->
+                <button class="close" id="SaveBTN" style="right: 30px;border-radius: 10px;" onclick="saveEditChanges(event)"> V Save </button>
+
+                <!-- 標題 -->
+                <p  style="font-size: 25px;"><b>&ensp; Add New Topics</b></p>
+
+                <div style="border: 1px solid #ccc;"></div> <!-- 水平橫線 -->
+
+               <!-- Topics欄位下拉式選單包含(動畫與漫畫、名人與電影、科技創新、金融投資) -->
+                <div class="input-container">
+                    <p><b>&ensp;&ensp; Topics:</b></p>
+                    <div style="display: flex; align-items: center;">
+                        <select id="EdittopicSelect" class="input-field" style="margin-right: 5px;">
+                            <option value="Select existing">Select existing</option>
+                            <option value="動畫與漫畫">動畫與漫畫</option>
+                            <option value="名人與電影">名人與電影</option>
+                            <option value="科技創新">科技創新</option>
+                            <option value="金融投資">金融投資</option>
+                        </select>
+                        <input type="text" placeholder="Enter new title" id="EditTopicInput" class="input-field"> 
+                    </div>
+                </div>
+                <!-- 輸入Titles欄位下拉式選單包含(好聽、好看、專業、發大財) -->
+                <div class="input-container">
+                    <p><b>&ensp;&ensp; Titles:</b></p>
+                    <div style="display: flex; align-items: center;">
+                        <select id="EdittitleSelect" class="input-field" style="margin-right: 5px;">
+                            <option value="Select existing">Select existing</option>
+                            <option value="好聽">好聽</option>
+                            <option value="好看">好看</option>
+                            <option value="專業">專業</option>
+                            <option value="發大財">發大財</option>
+                        </select>
+                        <input type="text" placeholder="Enter new title" id="EditTitleInput" class="input-field"> 
+                    </div>
+                </div>
+                <!-- enter a new Option or Add options and enter new Options -->
+                <div class="input-container" id="optionsContainer">
+                    <p><b>&ensp;&ensp; Options: &ensp;&ensp; </b></p>
+                    <div id="EditoptionInputs">
+                        <input type="text" placeholder="NewOptions" class="input-field">
+                        <br>
+                    </div>
+                    <button type="button" onclick="addOption_Edit()" class="add-options-btn">Add<br>options</button>
+                </div>
+
+                <div style="border: 1px solid #ccc;"></div> <!-- 水平橫線 -->
+                
+                <!-- 錯誤提示 -->
+                <div id="save_Edit_error-container" class="error-message" style="margin-top: 100px;display: none;"><br></div>
+            </div>            
+         </div>        
+    </main>
+</body>
+</html>

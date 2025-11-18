@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <link rel="stylesheet" href="style_RegisterPage.css">
+    <script src="RegisterScript.js" defer></script> <!-- 引入 JavaScript 文件 -->
+</head>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword1 = document.getElementById('togglePassword1');
+        const togglePassword2 = document.getElementById('togglePassword2');
+        const passwordField = document.getElementById('password');
+        const confirmPasswordField = document.getElementById('confirmPassword');
+
+        togglePassword1.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            // 切換圖示
+            this.src = type === 'password' ? 'pic/eye_closed_icon.png' : 'pic/eye_open_icon.png';
+        });
+
+        togglePassword2.addEventListener('click', function() {
+            const type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordField.setAttribute('type', type);
+            // 切換圖示
+            this.src = type === 'password' ? 'pic/eye_closed_icon.png' : 'pic/eye_open_icon.png';
+        });
+    });
+</script>
+
+<body>      
+    <main>
+        <div class="container-wrapper">          
+            <div> 
+                <p style="margin-top: -50px;font-family:fantasy;font-size: 35px;">Voting System</p>
+                <p style="margin-top: 0px;font-family:Microsoft JhengHei;font-size: 20px;">Create a new account</p>
+
+                <!-- 輸入使用者名欄位 -->
+                <div class="input-container">
+                    <input type="text" placeholder="Username">
+                    <img src="pic/username_icon.png" alt="user Icon"> <!-- 插入信箱圖示 -->
+                </div>
+
+                <!-- 輸入信箱欄位 -->
+                <div class="input-container">
+                    <input type="text" placeholder="Email">
+                    <img src="pic/email_icon.png" alt="Email Icon"> <!-- 插入信箱圖示 -->
+                </div>
+                 
+                <!-- 輸入密碼欄位 -->
+                <div class="input-container">
+                    <input type="password" id="password" placeholder="Password"> <!-- 輸入密碼欄位 -->
+                    <img src="pic/eye_closed_icon.png"  style="margin-right: 35px;height: 25px;" alt="Eye Icon" id="togglePassword1"> <!-- 插入眼睛圖示 -->
+                    <img src="pic/password_icon.png" alt="Password Icon"> <!-- 插入密碼圖示 -->
+                </div>
+
+                <!-- 輸入確認密碼欄位 -->
+                <div class="input-container">
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password"> <!-- 輸入密碼欄位 -->
+                    <img src="pic/eye_closed_icon.png"  style="margin-right: 35px;height: 25px;" alt="Eye Icon" id="togglePassword2"> <!-- 插入眼睛圖示 -->
+                    <img src="pic/Confirm_icon.png" alt="Confirm Password Icon"> <!-- 插入密碼圖示 -->
+                </div>
+
+
+                <!-- Register 欄位 -->
+                <br>
+                <button id="register-btn">
+                    <img src="pic/Login.png" style="height: 18px;" alt="Login"> <!-- 圖片 -->
+                    <b>Register</b>
+                </button> 
+
+                <!-- 已經有帳號了嗎?點此登入 文字超連結-->
+                <p><a href="index.html" style="color: #154360;"><b>已經有帳號了嗎?點此登入</b></a></p> <!-- 還尚未註冊?點此建立 文字超連結-->  
+
+                <!-- 錯誤提示 -->
+                <div id="error-container" class="error-message" style="display: none;"><br></div>
+            </div>
+        </div>   
+    </main>
+</body>
+</html>

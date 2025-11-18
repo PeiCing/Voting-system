@@ -1,0 +1,67 @@
+body, html {
+  background-color: #A8DADC;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; /* 或者 space-evenly */
+  align-items: stretch;
+  align-content: stretch;
+  height: 500px;
+  width: 1100px;
+  margin-left: 380px;
+  margin-top: 290px;
+}
+
+.AllModal {
+  width: 45%;
+  margin-bottom: 10px;
+  background-color: rgba(69, 123, 157, 0.5);
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  padding: 20px;
+}
+
+.AllModal button {
+  width: 100%;
+  margin: 0 auto; /* 让按钮水平居中对齐 */
+  margin-top: 5px; /* 添加上边距 */
+  margin-bottom: 5px; /* 添加下边距 */
+  padding: 10px 0;
+  background-color: #406e8e;
+  border: none;
+  border-radius: 15px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.AllModal button:hover {
+  background-color: #FFC107;
+  color: #01182f;
+  font-weight: bold;
+}
+
+#owner_photo {
+  width: 45px; /* 調整相片的寬度 */
+  height: 45px; /* 調整相片的高度 */
+  border-radius: 50%; /* 將相片裁剪成圓形 */
+}
+
+.AllModal p {
+  letter-spacing: 1px; /* 调整字与字之间的间距 */
+  margin: 7px 0; /* 上下各添加 10 像素的边距 */
+}
+
+/* 将包含 user 和 Titles 的 div 设置为 flex 布局 */
+.AllModal div {
+  display: flex;
+  justify-content: space-between; /* 使子元素两端对齐 */
+}
+
